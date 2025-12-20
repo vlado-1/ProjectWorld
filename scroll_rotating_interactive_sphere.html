@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Endless Smooth Scroll Rotating Sphere</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at top, #111 0%, #000 60%);
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    .scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%);
+      perspective: 1000px;
+      pointer-events: auto;
+    }
+
+    .sphere {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    .sphere::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #2a9df4, #012);
+      opacity: 0.25;
+      box-shadow: 0 0 40px rgba(42,157,244,0.6);
+    }
+
+    .point {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 10px #2a9df4;
+      cursor: pointer;
+      transition: transform 0.1s linear, opacity 0.1s linear;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10,10,20,0.95);
+      border: 1px solid #2a9df4;
+      padding: 20px 24px;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(42,157,244,0.6);
+      display: none;
+      z-index: 10;
+      max-width: 300px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="sphere" id="sphere"></div>
+</div>
+
+<div class="popup" id="popup">
+  <h3 id="popup-title"></h3>
+  <p id="popup-content"></p>
+  <button onclick="closePopup()">Close</button>
+</div>
+
+<script>
+const sphere = document.getElementById('sphere');
+const popup = document.getElementById('popup');
+const popupTitle = document.getElementById('popup-title');
+const popupContent = document.getElementById('popup-content');
+
+const pointsData = [
+  { lat: 0, lon: 0, title: 'Equator', text: 'This point sits on the equator.' },
+  { lat: 30, lon: 60, title: 'Northern Point', text: 'A point in the northern hemisphere.' },
+  { lat: -40, lon: 120, title: 'Southern Point', text: 'A point in the southern hemisphere.' },
+  { lat: 10, lon: 200, title: 'Eastern Point', text: 'Located further east.' },
+  { lat: -20, lon: 300, title: 'Western Point', text: 'Located further west.' }
+];
+
+const radius = 180;
+const points = [];
+
+function createPoints() {
+  pointsData.forEach(p => {
+    const point = document.createElement('div');
+    point.className = 'point';
+
+    const phi = (90 - p.lat) * Math.PI / 180;
+    const theta = p.lon * Math.PI / 180;
+
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.cos(phi);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+
+    point.dataset.x = x;
+    point.dataset.y = y;
+    point.dataset.z = z;
+
+    point.onclick = e => {
+      e.stopPropagation();
+      popupTitle.textContent = p.title;
+      popupContent.textContent = p.text;
+      popup.style.display = 'block';
+    };
+
+    sphere.appendChild(point);
+    points.push(point);
+  });
+}
+
+function closePopup() {
+  popup.style.display = 'none';
+}
+
+let rotationY = 0;
+let targetRotationY = 0;
+
+function updatePoints(rotationYDeg) {
+  const ry = rotationYDeg * Math.PI / 180;
+
+  points.forEach(point => {
+    const x = +point.dataset.x;
+    const y = +point.dataset.y;
+    const z = +point.dataset.z;
+
+    const x1 = x * Math.cos(ry) - z * Math.sin(ry);
+    const z1 = x * Math.sin(ry) + z * Math.cos(ry);
+
+    if (z1 <= 0) {
+      point.style.display = 'none';
+      return;
+    }
+
+    point.style.display = 'block';
+    point.style.transform = `translate3d(${x1 + 200}px, ${y + 200}px, ${z1}px)`;
+  });
+}
+
+// Smooth animation loop
+function animate() {
+  rotationY += (targetRotationY - rotationY) * 0.1; // easing factor
+  updatePoints(rotationY);
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Scroll-based rotation input
+window.addEventListener('wheel', e => {
+  targetRotationY += e.deltaY * 0.5;
+});
+
+// Mouse drag rotation input
+let dragging = false;
+let lastX = 0;
+document.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; });
+document.addEventListener('mouseup', () => dragging = false);
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  targetRotationY += (e.clientX - lastX) * 0.5;
+  lastX = e.clientX;
+});
+
+createPoints();
+updatePoints(0);
+</script>
+
+</body>
+</html>
