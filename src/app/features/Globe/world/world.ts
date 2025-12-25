@@ -7,18 +7,18 @@ import { Component } from '@angular/core';
   styleUrl: './world.css',
 })
 export class World {
-  private sphere:       HTMLElement | null = document.getElementById('sphere');
-  private popup:        HTMLElement | null = document.getElementById('popup');
-  private popupTitle:   HTMLElement | null = document.getElementById('popup-title');
-  private popupContent: HTMLElement | null = document.getElementById('popup-content');
+  private sphere:       HTMLElement | null;
+  private popup:        HTMLElement | null;
+  private popupTitle:   HTMLElement | null;
+  private popupContent: HTMLElement | null;
 
   private pointsData: Object[];
 
   private radius: number   = 180;
   private points: Object[] = [];
 
-  private rotationY:       number = 0;
-  private targetRotationY: number = 0;
+  public rotationY:       number = 0;
+  public targetRotationY: number = 0;
 
   createPoints(): void {
     this.pointsData.forEach((p: any) => {
@@ -81,10 +81,15 @@ export class World {
   animate(): void {
     this.rotationY += (this.targetRotationY - this.rotationY) * 0.1; // easing factor
     this.updatePoints(this.rotationY);
-    requestAnimationFrame(this.animate);
+    requestAnimationFrame(() => {this.animate()});
   }
 
   constructor() {
+    this.sphere       = document.getElementById('sphere');
+    this.popup        = document.getElementById('popup');
+    this.popupTitle   = document.getElementById('popup-title');
+    this.popupContent = document.getElementById('popup-content');
+
     this.pointsData =  [ 
                          { lat: 0, lon: 0, title: 'Equator', text: 'This point sits on the equator.' },
                          { lat: 30, lon: 60, title: 'Northern Point', text: 'A point in the northern hemisphere.' },

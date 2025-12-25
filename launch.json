@@ -1,0 +1,16 @@
+// Source - https://stackoverflow.com/a/51153694
+// Posted by skryvets, modified by community. See post 'Timeline' for change history
+// Retrieved 2025-12-25, License - CC BY-SA 4.0
+
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Angular debugging session",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
