@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RunOnInitDirective } from '../../../core/run-on-init-directive';
 
 @Component({
   selector: 'app-world',
-  imports: [],
+  imports: [CommonModule, RunOnInitDirective],
   templateUrl: './world.html',
   styleUrl: './world.css',
 })
 export class World {
-  private sphere:       HTMLElement | null;
-  private popup:        HTMLElement | null;
-  private popupTitle:   HTMLElement | null;
-  private popupContent: HTMLElement | null;
+  private sphere:       HTMLElement | null = null;
+  private popup:        HTMLElement | null = null;
+  private popupTitle:   HTMLElement | null = null;
+  private popupContent: HTMLElement | null = null;
 
-  private pointsData: Object[];
+  public pointsData: Object[] = [];
 
-  private radius: number   = 180;
-  private points: Object[] = [];
+  private radius: number        = 180;
+  private points: HTMLElement[] = [];
 
   public rotationY:       number = 0;
   public targetRotationY: number = 0;
 
-  createPoints(): void {
-    this.pointsData.forEach((p: any) => {
-          const point = document.createElement('div');
-          point.className = 'point';
+  createPoint(p: any): void {
+          // TODO: Figure out why the points are not visible in browser even (why 0 height?)
 
           const phi = (90 - p.lat) * Math.PI / 180;
           const theta = p.lon * Math.PI / 180;
@@ -32,11 +32,11 @@ export class World {
           const y = this.radius * Math.cos(phi);
           const z = this.radius * Math.sin(phi) * Math.sin(theta);
 
-          point.dataset['x'] = x.toString();
-          point.dataset['y'] = y.toString();
-          point.dataset['z'] = z.toString();
+          p.dataset['x'] = x.toString();
+          p.dataset['y'] = y.toString();
+          p.dataset['z'] = z.toString();
 
-          point.onclick = e => {
+          p.onclick = (e: any) => {
             e.stopPropagation();
             if (this.popupTitle !== null)
               this.popupTitle.textContent = p.title;
@@ -46,9 +46,8 @@ export class World {
               this.popup.style.display = 'block';
           };
 
-          this.sphere?.appendChild(point);
-          this.points.push(point);    
-    });
+          this.sphere?.appendChild(p);
+          this.points.push(p);    
   }
 
   closePopup(): void {
@@ -84,24 +83,18 @@ export class World {
     requestAnimationFrame(() => {this.animate()});
   }
 
-  constructor() {
+  ngAfterViewInit(): void {
+    // Need the below DOM elements to exist before I can get them.
     this.sphere       = document.getElementById('sphere');
     this.popup        = document.getElementById('popup');
     this.popupTitle   = document.getElementById('popup-title');
     this.popupContent = document.getElementById('popup-content');
 
-    this.pointsData =  [ 
-                         { lat: 0, lon: 0, title: 'Equator', text: 'This point sits on the equator.' },
-                         { lat: 30, lon: 60, title: 'Northern Point', text: 'A point in the northern hemisphere.' },
-                         { lat: -40, lon: 120, title: 'Southern Point', text: 'A point in the southern hemisphere.' },
-                         { lat: 10, lon: 200, title: 'Eastern Point', text: 'Located further east.' },
-                         { lat: -20, lon: 300, title: 'Western Point', text: 'Located further west.' }
-                        ];
 
     this.animate();
 
     // Scroll-based rotation input
-    window.addEventListener('wheel', e => {
+    window.addEventListener('wheel', (e: any) => {
       this.targetRotationY += e.deltaY * 0.5;
     });
 
@@ -116,7 +109,18 @@ export class World {
       lastX = e.clientX;
     });
 
-    this.createPoints();
     this.updatePoints(0);
   }
+
+  constructor() {
+  
+    this.pointsData =  [ 
+                         { lat: 0, lon: 0, title: 'Equator', text: 'This point sits on the equator.' },
+                         { lat: 30, lon: 60, title: 'Northern Point', text: 'A point in the northern hemisphere.' },
+                         { lat: -40, lon: 120, title: 'Southern Point', text: 'A point in the southern hemisphere.' },
+                         { lat: 10, lon: 200, title: 'Eastern Point', text: 'Located further east.' },
+                         { lat: -20, lon: 300, title: 'Western Point', text: 'Located further west.' }
+                        ];
+  }
+
 }
