@@ -60,7 +60,7 @@ export class World {
 
 
   updatePoints(rotationYDeg: number): void {
-    const ry = rotationYDeg * Math.PI / 180;
+    const ry = rotationYDeg * Math.PI / 720;
     this.points.forEach((point: any) => {
       const x = +point.dataset['x'];
       const y = +point.dataset['y'];
