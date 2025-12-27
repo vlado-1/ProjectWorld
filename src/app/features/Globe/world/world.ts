@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RunOnInitDirective } from '../../../core/run-on-init-directive';
+import { RunOnInitDirective } from '../../../core/Directives/run-on-init-directive';
 
 @Component({
   selector: 'app-world',
@@ -22,8 +22,11 @@ export class World {
   public rotationY:       number = 0;
   public targetRotationY: number = 0;
 
-  createPoint(p: any): void {
+  createPoint(couple: any): void {
           // TODO: Figure out why the points are not visible in browser even (why 0 height?)
+
+          var p = couple.p;
+          var pointRef = couple.pointRef;
 
           const phi = (90 - p.lat) * Math.PI / 180;
           const theta = p.lon * Math.PI / 180;
@@ -32,11 +35,11 @@ export class World {
           const y = this.radius * Math.cos(phi);
           const z = this.radius * Math.sin(phi) * Math.sin(theta);
 
-          p.dataset['x'] = x.toString();
-          p.dataset['y'] = y.toString();
-          p.dataset['z'] = z.toString();
+          pointRef.dataset['x'] = x.toString();
+          pointRef.dataset['y'] = y.toString();
+          pointRef.dataset['z'] = z.toString();
 
-          p.onclick = (e: any) => {
+          pointRef.onclick = (e: any) => {
             e.stopPropagation();
             if (this.popupTitle !== null)
               this.popupTitle.textContent = p.title;
@@ -46,8 +49,8 @@ export class World {
               this.popup.style.display = 'block';
           };
 
-          this.sphere?.appendChild(p);
-          this.points.push(p);    
+          this.sphere?.appendChild(pointRef);
+          this.points.push(pointRef);    
   }
 
   closePopup(): void {
