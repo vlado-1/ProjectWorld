@@ -22,8 +22,8 @@ export class World {
   public rotationY:       number = 0;
   public targetRotationY: number = 0;
 
+  // Need two variables to create each point: point data (p) + point element reference (pointRef)
   createPoint(couple: any): void {
-          // TODO: Figure out why the points are not visible in browser even (why 0 height?)
 
           var p = couple.p;
           var pointRef = couple.pointRef;
@@ -46,7 +46,7 @@ export class World {
             if (this.popupContent !== null)
               this.popupContent.textContent = p.text;
             if (this.popup !== null)
-              this.popup.style.display = 'block';
+              this.popup.style.display = this.popup.style.display === 'block' ? 'none' : 'block';
           };
 
           this.sphere?.appendChild(pointRef);

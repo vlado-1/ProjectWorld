@@ -53,3 +53,7 @@
       max-width: 300px;
       text-align: center;
     }
+
+    button:hover {
+      cursor: pointer;
+    }
