@@ -6,7 +6,7 @@ import { RunOnInitDirective } from '../../../core/Directives/run-on-init-directi
   selector: 'app-world',
   imports: [CommonModule, RunOnInitDirective],
   templateUrl: './world.html',
-  styleUrl: './world.css',
+  styleUrl: './world.css'
 })
 export class World {
   private sphere:       HTMLElement | null = null;
@@ -16,7 +16,7 @@ export class World {
 
   public pointsData: Object[] = [];
 
-  private radius: number        = 200;
+  private radius: number        = 210;
   private points: HTMLElement[] = [];
 
   public rotationY:       number = 0;
@@ -49,6 +49,16 @@ export class World {
               this.popup.style.display = this.popup.style.display === 'block' ? 'none' : 'block';
           };
 
+          if (p.img !== undefined) {
+            const imgElem = document.createElement('img');
+            imgElem.src = p.img;
+            imgElem.style.backgroundColor = 'white';
+            imgElem.style.width = '30px';
+            imgElem.style.height = '30px';
+
+            pointRef.appendChild(imgElem);
+          }
+
           this.sphere?.appendChild(pointRef);
           this.points.push(pointRef);    
   }
@@ -72,6 +82,15 @@ export class World {
       if (z1 <= 0) {
         point.style.display = 'none';
         return;
+      }
+
+      /* Add rotation to the image  */
+      if (point.children.length > 0) {
+        var angleY = -(Math.PI / 2) + Math.atan2(z1, x1);
+        (<HTMLElement>(point.children[0])).style.transform = `rotateY(${angleY}rad)`;
+
+        var angleX = Math.asin(y / Math.sqrt(x1 * x1 + y * y + z1 * z1));
+        (<HTMLElement>(point.children[0])).style.transform += ` rotateX(${angleX }rad)`;
       }
 
       point.style.display = 'block';
@@ -118,11 +137,10 @@ export class World {
   constructor() {
   
     this.pointsData =  [ 
-                         { lat: 0, lon: 0, title: 'Equator', text: 'This point sits on the equator.' },
-                         { lat: 30, lon: 60, title: 'Northern Point', text: 'A point in the northern hemisphere.' },
-                         { lat: -40, lon: 120, title: 'Southern Point', text: 'A point in the southern hemisphere.' },
-                         { lat: 10, lon: 200, title: 'Eastern Point', text: 'Located further east.' },
-                         { lat: -20, lon: 300, title: 'Western Point', text: 'Located further west.' }
+                         { lat: 0, lon: 0, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: './assets/images/Unity.svg' },
+                         { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: './assets/images/Bravura.png' },
+                         { lat: -40, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: './assets/images/Website.ico' },
+                         { lat: 10, lon: 200, title: 'University', text: 'Completed a bachelor and masters degree majoring in computer science and software development respectively.', img: './assets/images/University.png' },
                         ];
   }
 
