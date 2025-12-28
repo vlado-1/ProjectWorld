@@ -16,7 +16,7 @@ export class World {
 
   public pointsData: Object[] = [];
 
-  private radius: number        = 180;
+  private radius: number        = 200;
   private points: HTMLElement[] = [];
 
   public rotationY:       number = 0;
