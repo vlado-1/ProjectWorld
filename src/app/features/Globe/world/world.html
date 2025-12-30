@@ -1,12 +1,10 @@
 <div class="scene">
-  <div class="sphere" id="sphere">
-    <!-- Points will be dynamically added here -->
-    <div class="point" *ngFor="let p of pointsData;" #pointRef [runOnInit]="{p,pointRef}" (init)="createPoint($event)"></div>
-  </div>
+  <!-- WebGL Canvas -->
+  <canvas #globeCanvas id="globeCanvas"></canvas>
 </div>
 
 <div class="popup" id="popup">
   <h3 id="popup-title"></h3>
   <p id="popup-content"></p>
   <button (click)="closePopup()">Close</button>
-</div>
+</div> 
