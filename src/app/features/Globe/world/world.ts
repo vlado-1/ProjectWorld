@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Main, PerspectiveCameraAuto } from '@three.ez/main';
 import * as THREE from 'three';
 
 @Component({
@@ -19,6 +20,8 @@ export class World implements AfterViewInit {
   private raycaster = new THREE.Raycaster();
   private mouse = new THREE.Vector2();
 
+  private main: Main;
+
   public pointsData: any[] = [];
 
   private radius: number = 210;
@@ -31,11 +34,13 @@ export class World implements AfterViewInit {
 
   constructor() {
     this.pointsData = [
-      { lat: 0, lon: 0, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity.svg' },
+      { lat: 5, lon: 5, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity.svg' },
       { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: 'assets/images/Bravura.png' },
-      { lat: -40, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: 'assets/images/Website.png' },
+      { lat: -30, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: 'assets/images/Website.png' },
       { lat: 10, lon: 200, title: 'University', text: 'Completed a bachelor and masters degree majoring in computer science and software development respectively.', img: 'assets/images/University.png' },
     ];
+
+    this.main = new Main(); // init inside the renderer, and handle events, resize, etc
   }
 
   ngAfterViewInit(): void {
@@ -56,7 +61,7 @@ export class World implements AfterViewInit {
     const width = canvas.clientWidth || 400;
     const height = canvas.clientHeight || 400;
 
-    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 5000);
+    this.camera = new PerspectiveCameraAuto(45, width / height, 0.1);
     this.camera.position.set(0, 0, this.radius * 2.2);
 
     // Lights (brighter default + subtle hemisphere fill)
@@ -71,6 +76,7 @@ export class World implements AfterViewInit {
     const globeMat = new THREE.MeshStandardMaterial({ color: 0x0f3d6e, roughness: 1.0, metalness: 0.0 });
     this.globe = new THREE.Mesh(globeGeo, globeMat);
     this.scene.add(this.globe);
+    this.globe.on('click', (e: any) => {alert('globe clicked'); e.stopPropagation(); });
 
     // Instead of separate textured spheres, paint the images directly onto the globe texture
     const texWidth = 2048;
@@ -98,92 +104,95 @@ export class World implements AfterViewInit {
     (this.globe.material as any).emissiveIntensity = 0.6;
     (this.globe.material as any).needsUpdate = true;
 
-    // Helper: create invisible pickable markers that sit on the globe and rotate with it
-    this.pointsData.forEach((p, idx) => {
-      // compute UV mapping from lat/lon
-      const lon = ((p.lon % 360) + 360) % 360; // normalize
-      const u = lon / 360;
-      const v = (90 - p.lat) / 180;
-      const px = Math.round(u * texWidth);
-      const py = Math.round(v * texHeight);
+    // // Helper: create invisible pickable markers that sit on the globe and rotate with it
+    // this.pointsData.forEach((p, idx) => {
+    //   // compute UV mapping from lat/lon
+    //   const lon = ((p.lon % 360) + 360) % 360; // normalize
+    //   const u = lon / 360;
+    //   const v = (90 - p.lat) / 180;
+    //   const px = Math.round(u * texWidth);
+    //   const py = Math.round(v * texHeight);
 
-      // draw a soft drop-shadow and circular background, then paint the image clipped to the circle
-      const markerSize = 64; // pixels
-      const shadowRadius = markerSize * 0.6;
-      const shadowY = py + markerSize * 0.15; // slightly offset downward for natural shadow
-      const grad = ctx.createRadialGradient(px, shadowY, 0, px, shadowY, shadowRadius);
-      grad.addColorStop(0, 'rgba(0,0,0,0.35)');
-      grad.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.beginPath();
-      ctx.fillStyle = grad;
-      ctx.arc(px, shadowY, shadowRadius, 0, Math.PI * 2);
-      ctx.fill();
+    //   // draw a soft drop-shadow and circular background, then paint the image clipped to the circle
+    //   const markerSize = 64; // pixels
+    //   const shadowRadius = markerSize * 0.6;
+    //   const shadowY = py + markerSize * 0.15; // slightly offset downward for natural shadow
+    //   const grad = ctx.createRadialGradient(px, shadowY, 0, px, shadowY, shadowRadius);
+    //   grad.addColorStop(0, 'rgba(0,0,0,0.35)');
+    //   grad.addColorStop(1, 'rgba(0,0,0,0)');
+    //   ctx.beginPath();
+    //   ctx.fillStyle = grad;
+    //   ctx.arc(px, shadowY, shadowRadius, 0, Math.PI * 2);
+    //   ctx.fill();
 
-      // white circular plate
-      ctx.beginPath();
-      ctx.arc(px, py, markerSize * 0.55, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.96)';
-      ctx.fill();
-      ctx.closePath();
+    //   // white circular plate
+    //   ctx.beginPath();
+    //   ctx.arc(px, py, markerSize * 0.55, 0, Math.PI * 2);
+    //   ctx.fillStyle = 'rgba(255,255,255,0.96)';
+    //   ctx.fill();
+    //   ctx.closePath();
 
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        const s = markerSize;
-        ctx.save();
-        // clip to circle for soft rounded image
-        ctx.beginPath();
-        ctx.arc(px, py, markerSize * 0.55, 0, Math.PI * 2);
-        ctx.clip();
-        ctx.drawImage(img, px - s/2, py - s/2, s, s);
+    //   const img = new Image();
+    //   img.crossOrigin = 'anonymous';
+    //   img.onload = () => {
+    //     const s = markerSize;
+    //     ctx.save();
+    //     // clip to circle for soft rounded image
+    //     ctx.beginPath();
+    //     ctx.arc(px, py, markerSize * 0.55, 0, Math.PI * 2);
+    //     ctx.clip();
+    //     ctx.drawImage(img, px - s/2, py - s/2, s, s);
 
-        // brighten the center slightly with a radial light overlay
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        const highlight = ctx.createRadialGradient(px, py, 0, px, py, s * 0.6);
-        highlight.addColorStop(0, 'rgba(255,255,255,0.22)');
-        highlight.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = highlight;
-        ctx.beginPath();
-        ctx.arc(px, py, s * 0.6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+    //     // brighten the center slightly with a radial light overlay
+    //     ctx.save();
+    //     ctx.globalCompositeOperation = 'lighter';
+    //     const highlight = ctx.createRadialGradient(px, py, 0, px, py, s * 0.6);
+    //     highlight.addColorStop(0, 'rgba(255,255,255,0.22)');
+    //     highlight.addColorStop(1, 'rgba(255,255,255,0)');
+    //     ctx.fillStyle = highlight;
+    //     ctx.beginPath();
+    //     ctx.arc(px, py, s * 0.6, 0, Math.PI * 2);
+    //     ctx.fill();
+    //     ctx.restore();
 
-        ctx.restore();
+    //     ctx.restore();
 
-        // subtle outline
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(0,0,0,0.18)';
-        ctx.beginPath();
-        ctx.arc(px, py, markerSize * 0.55, 0, Math.PI * 2);
-        ctx.stroke();
+    //     // subtle outline
+    //     ctx.lineWidth = 2;
+    //     ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+    //     ctx.beginPath();
+    //     ctx.arc(px, py, markerSize * 0.55, 0, Math.PI * 2);
+    //     ctx.stroke();
 
-        canvasTexture.needsUpdate = true; 
-      };
-      img.onerror = (err) => { console.error('failed to load marker image', p.img, err); };
-      img.src = p.img;
+    //     canvasTexture.needsUpdate = true; 
+    //   };
+    //   img.onerror = (err) => { console.error('failed to load marker image', p.img, err); };
+    //   img.src = p.img;
 
-        // Create a small invisible sphere for picking, add as child of globe so it rotates with globe
-      const phi = (90 - p.lat) * Math.PI / 180;
-      const theta = p.lon * Math.PI / 180;
-      const x = (this.radius + 1) * Math.sin(phi) * Math.cos(theta);
-      const y = (this.radius + 1) * Math.cos(phi);
-      const z = (this.radius + 1) * Math.sin(phi) * Math.sin(theta);
+    //     // Create a small invisible sphere for picking, add as child of globe so it rotates with globe
+    //   const phi = (90 - p.lat) * Math.PI / 180;
+    //   const theta = p.lon * Math.PI / 180;
+    //   const x = (this.radius + 1) * Math.sin(phi) * Math.cos(theta);
+    //   const y = (this.radius + 1) * Math.cos(phi);
+    //   const z = (this.radius + 1) * Math.sin(phi) * Math.sin(theta);
 
-      const pickGeo = new THREE.SphereGeometry(22, 12, 12); // larger sphere for more reliable picking
-      const pickMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.0 });
-      const pickMesh = new THREE.Mesh(pickGeo, pickMat);
-      pickMesh.name = `pick-${idx}`;
-      pickMesh.position.set(x, y, z);
-      (pickMesh as any).userData = { title: p.title, text: p.text, lat: p.lat, lon: p.lon, px, py };
-      this.globe.add(pickMesh);
-      this.markers.push(pickMesh);
-      // debug log of pick mesh world position
-      const wp = new THREE.Vector3();
-      pickMesh.getWorldPosition(wp);
-      console.log(`pickMesh ${pickMesh.name} created at world ${wp.toArray().map(n=>n.toFixed(1)).join(', ')} (px ${px}, py ${py})`);
-    });
+    //   const pickGeo = new THREE.SphereGeometry(22, 12, 12); // larger sphere for more reliable picking
+    //   const pickMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.0 });
+    //   const pickMesh = new THREE.Mesh(pickGeo, pickMat);
+    //   pickMesh.name = `pick-${idx}`;
+    //   pickMesh.position.set(x, y, z);
+    //   (pickMesh as any).userData = { title: p.title, text: p.text, lat: p.lat, lon: p.lon, px, py };
+    //   this.globe.add(pickMesh);
+    //   this.markers.push(pickMesh);
+    //   // debug log of pick mesh world position
+    //   const wp = new THREE.Vector3();
+    //   pickMesh.getWorldPosition(wp);
+    //   console.log(`pickMesh ${pickMesh.name} created at world ${wp.toArray().map(n=>n.toFixed(1)).join(', ')} (px ${px}, py ${py})`);
+    // });
     canvasTexture.needsUpdate = true;
+
+    this.main.createView({ scene: this.scene, camera: this.camera }); // create the view to be rendered
+
     // Events
     window.addEventListener('resize', () => this.onWindowResize());
 
