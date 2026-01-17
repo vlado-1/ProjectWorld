@@ -1,0 +1,22 @@
+
+  <!--
+     Because the 3D globe (Three.js/three.ez) runs in its own animation loop, 
+     it sits outside of Angular's "Zone." When the Subject emits a value from 
+     a 3D click, Angular doesn't realize that a variable has changed, so it 
+     doesn't bother re-rendering the HTML.
+    
+    To avoid NgZone and manual subscriptions, let Angular 
+    handle the subscription directly in the HTML. This is more "Angular-native" 
+    and usually avoids Zone issues automatically.
+
+    Using new angular @if as *ngIf has been marked for deprecation in the new angular.
+-->
+@if (popupToggle.popupSubject | async; as d) {
+  @if (data.visible) {
+    <div class="popup" id="popup">
+      <h3 id="popup-title"> {{data.title}}</h3>
+      <p id="popup-content">{{data.content}}</p>
+      <button (click)="closePopup()">Close</button>
+    </div> 
+  }
+}

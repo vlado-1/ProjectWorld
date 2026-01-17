@@ -1,8 +1,9 @@
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Events, Main, PerspectiveCameraAuto } from '@three.ez/main';
+import { Main, PerspectiveCameraAuto } from '@three.ez/main';
 import * as THREE from 'three';
 import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
+import { PopupToggle } from '../../../core/Services/popup-toggle';
 
 
 @Component({
@@ -26,29 +27,20 @@ export class World implements AfterViewInit {
   public rotationY: number = 0;
   public targetRotationY: number = 0;
 
-  private popup: HTMLElement | null = null;
-  private popupTitle: HTMLElement | null = null;
-  private popupContent: HTMLElement | null = null;
+  public popupToggle: PopupToggle;
 
-  /* Due to click event firing on canvas and popup simultaneously when
-     close button pressed, the popup is closed and then re-opened.
-     Need a variable 'close' to know if marker should really open popup or
-     was accidentally fired when user presses close button. */
-  private popupState: string = 'closed';
-
-  constructor() {
+  constructor(private pt: PopupToggle) {
     this.pointsData = [
       { lat: 5, lon: 5, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity.svg' },
       { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: 'assets/images/Bravura.png' },
       { lat: -30, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: 'assets/images/Website.png' },
       { lat: 10, lon: 200, title: 'University', text: 'Completed a bachelor and masters degree majoring in computer science and software development respectively.', img: 'assets/images/University.png' },
     ];
+
+    this.popupToggle = pt;
   }
 
   ngAfterViewInit(): void {
-    this.popup = document.getElementById('popup');
-    this.popupTitle = document.getElementById('popup-title');
-    this.popupContent = document.getElementById('popup-content');
 
     const canvas = this.canvasRef.nativeElement;
 
@@ -123,23 +115,7 @@ export class World implements AfterViewInit {
 
       // 3. Make the marker look at that target
       marker.on('click', (e: any) => {
-        console.log(this.popupState);
-        if (this.popupState === 'button closed') {
-          this.popupState = 'closed';
-          return;
-        }
-
-        if (this.popup != null) {
-          this.popup.classList.add('visible');
-          this.popupState = 'open';
-
-          if (this.popupTitle != null) {
-            this.popupTitle.textContent = p.title;
-          }
-          if (this.popupContent != null) {
-            this.popupContent.textContent = p.text;
-          }
-        }
+        this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true});
       })
       this.globe.add(marker); // It will now rotate with the globe
 
@@ -153,6 +129,7 @@ export class World implements AfterViewInit {
       scene: this.scene, 
       camera: this.camera, 
     }); // create the view to be rendered
+    this.main.showStats = false;
 
 
   }
@@ -174,12 +151,5 @@ export class World implements AfterViewInit {
       const y = radius * Math.cos(phi);
 
       return new THREE.Vector3(x, y, z);
-  }
-
-  closePopup(e: MouseEvent): void {
-      this.popup?.classList.remove('visible');
-              console.log("Closing: " + this.popupState);
-
-      this.popupState = 'button closed';
   }
 }

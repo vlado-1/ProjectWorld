@@ -17,35 +17,3 @@
   /* box-shadow: 0 0 40px rgba(42,157,244,0.2) inset; */
   /* background: radial-gradient(circle at 30% 30%, #091728, #001018); */
 }
-
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(10,10,20,0.85);
-  border: 1px solid #2a9df4;
-  padding: 20px 24px;
-  border-radius: 10px;
-  box-shadow: 0 0 30px rgba(42,157,244,0.6);
-  display: none;
-  z-index: 10;
-  max-width: 300px;
-  text-align: center;
-  pointer-events: auto;
-}
-
-button:hover {
-  cursor: pointer;
-}
-
-button {
-  pointer-events: auto; /* Ensure buttons specifically are clickable */
-  z-index: 10;
-}
-
-/* small helper for popup pointer */
-.popup.visible {
-  display: block;
-  pointer-events: auto;
-}
