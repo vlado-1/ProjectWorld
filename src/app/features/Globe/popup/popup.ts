@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { PopupParam } from '../../../core/Interfaces/popup-param';
 import { PopupToggle } from '../../../core/Services/popup-toggle';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-popup',
@@ -22,7 +21,6 @@ export class Popup {
   }
 
   closePopup(): void {
-    console.log("here");
     this.data.visible = false;
     this.popupToggle.togglePopup(this.data);
   }

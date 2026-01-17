@@ -47,15 +47,9 @@ export class World implements AfterViewInit {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
-    // Ensure correct color space for nicer brightness
-    const colorEncoding = (THREE as any).sRGBEncoding ?? (THREE as any).SRGBColorSpace ?? undefined;
-    if (colorEncoding !== undefined) (this.renderer as any).outputEncoding = colorEncoding;
-
     this.scene = new THREE.Scene();
 
-    const width = canvas.clientWidth || 400;
-    const height = canvas.clientHeight || 400;
-
+    // Values arrived at from trial and error
     this.camera = new PerspectiveCameraAuto(50, 0.1,2000);
     this.camera.position.set(0, 0, 280);
 
@@ -70,68 +64,70 @@ export class World implements AfterViewInit {
     const globeGeo = new THREE.SphereGeometry(this.radius, 64, 64);
     const globeMat = new THREE.MeshStandardMaterial({ color: 0x0e1c39a1, roughness: 1.0, metalness: 0.0 });
     this.globe = new THREE.Mesh(globeGeo, globeMat);
+
     this.globe.on('animate', () => {            
       this.rotationY += (this.targetRotationY - this.rotationY) * 0.1;
       this.globe.rotation.y = this.rotationY;
-   });
-   this.globe.on('wheel',       (e: any) => { 
-        this.targetRotationY += e.deltaY * 0.0005;
-      }
-   );
+    });
+    this.globe.on('wheel', (e: any) => { 
+          this.targetRotationY += e.deltaY * 0.0005;
+        }
+    );
 
     this.scene.add(this.globe);
 
-    // // Helper: create invisible pickable markers that sit on the globe and rotate with it
+    // Convert each point into a marker on the globe.
     this.pointsData.forEach((p: any) => {
       
-      // 1. Create the texture
+      // Create a texture for each point, that displays associated image
       const loader = new THREE.TextureLoader();
       const markerTex = loader.load(p.img);
 
+      // Convert point longitude/latitude coordinates to x,y,z coordinates.
       const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 0.2); // +0.2 to avoid z-fighting
 
-      // We need an orientation (Euler or Quaternion) for the projection box
-    const dummy = new THREE.Object3D();
-    dummy.position.copy(pos);
-    dummy.lookAt(new THREE.Vector3(0, 0, 0)); // Look at center
-    dummy.rotateY(Math.PI); // Rotate 180 degrees around Z to face outward
-    const orientation = dummy.rotation;
+     /* Create Decal Geometry for texture.
+        The term "decal" is short for "decalcomania," a technique that involves 
+        transferring designs from one surface to another (i.e. 2D to sphere in this case). 
+        - wikipedia */
 
-    // 2. Create Decal Geometry
-    // Parameters: (mesh, position, orientation, sizeVector)
-    const size = new THREE.Vector3(30,30,30); // The size of the projection box
-    const decalGeo = new DecalGeometry(this.globe, pos, orientation, size);
+      // Determine x,y,z rotation so object faces away for sphere centered at origin.
+      const dummy = new THREE.Object3D();
+      dummy.position.copy(pos);
+      dummy.lookAt(new THREE.Vector3(0, 0, 0)); // Look at center
+      dummy.rotateY(Math.PI); // Rotate 180 degrees around Z to face outward
+      const orientation = dummy.rotation;
 
-    // 3. Create Material
-    const decalMat = new THREE.MeshBasicMaterial({
-        map: markerTex,
-        depthTest: true,
-        depthWrite: false, // Prevents glitches when multiple decals overlap
-        polygonOffset: true, // Crucial: pushes the decal slightly "above" the globe surface
-        polygonOffsetFactor: -4, 
-    });
+      const size = new THREE.Vector3(30,30,30); // The size of the projection box
+      const decalGeo = new DecalGeometry(this.globe, pos, orientation, size);
+      const decalMat = new THREE.MeshBasicMaterial({
+          map: markerTex,
+          depthTest: true,
+          depthWrite: false, // Prevents glitches when multiple decals overlap
+          polygonOffset: true, // Crucial: pushes the decal slightly "above" the globe surface
+          polygonOffsetFactor: -4, 
+      });
 
       const marker = new THREE.Mesh(decalGeo, decalMat);
 
-      // 3. Make the marker look at that target
+      // Add click event which spawns popup
       marker.on('click', (e: any) => {
         this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true});
       })
-      this.globe.add(marker); // It will now rotate with the globe
 
+      // Add texture to globe so it rotates with it
+      this.globe.add(marker);
     });
       
-    this.scene.activeSmartRendering();
-
     // need to supply the renderer to Main for it to manage the render loop
     this.main = new Main({renderer: this.renderer, fullscreen: false, rendererParameters: { canvas, antialias: true, alpha: true }});
     this.main.createView({ 
       scene: this.scene, 
       camera: this.camera, 
     }); // create the view to be rendered
+    
+    // Remove screen performance stats
     this.main.showStats = false;
-
-
   }
 
   /**
@@ -141,15 +137,15 @@ export class World implements AfterViewInit {
    * @param {number} radius - The radius of your globe
    */
   latLonToVector3(lat: number, lon: number, radius: number) {
-      // 1. Convert degrees to radians
-      const phi = (90 - lat) * (Math.PI / 180);
-      const theta = (lon + 180) * (Math.PI / 180);
+    // 1. Convert degrees to radians
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
 
-      // 2. Calculate coordinates
-      const x = -(radius * Math.sin(phi) * Math.cos(theta));
-      const z = radius * Math.sin(phi) * Math.sin(theta);
-      const y = radius * Math.cos(phi);
+    // 2. Calculate coordinates
+    const x = -(radius * Math.sin(phi) * Math.cos(theta));
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
 
-      return new THREE.Vector3(x, y, z);
+    return new THREE.Vector3(x, y, z);
   }
 }
