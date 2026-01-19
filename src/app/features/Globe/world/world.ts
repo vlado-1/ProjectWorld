@@ -53,12 +53,18 @@ export class World implements AfterViewInit {
     this.camera = new PerspectiveCameraAuto(50, 0.1,2000);
     this.camera.position.set(0, 0, 280);
 
-    // Lights (brighter default + subtle hemisphere fill)
-    const ambient = new THREE.AmbientLight(0xffffff, 0.9);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x11111a, 0.25);
-    const dir = new THREE.DirectionalLight(0xffffff, 0.6);
-    dir.position.set(5, 3, 5);
-    this.scene.add(ambient, hemi, dir);
+    // To achieve a "Sun in Space" look, you need to move away from flat, even lighting (like AmbientLight) and move toward high-contrast, directional lighting. In space, there is no atmosphere to scatter light, so shadows are harsh, black, and distinct.11. The "Sun": Use a Single Strong Directional LightIn your current code, you have multiple lights ($Ambient$, $Hemisphere$, $Directional$). To mimic the sun, the Directional Light should do 90% of the work.TypeScript// 1. Remove or drastically lower the Ambient Light
+    // Space is black; ambient light should be near zero.
+    const ambient = new THREE.AmbientLight(0xffffff, 0.05); 
+
+    // Setup the Sun
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.5); // High intensity
+    sunLight.position.set(100, 50, 100); // Coming from a far angle
+    this.scene.add(sunLight, ambient);
+
+    // Sky color (slight blue) and Ground color (very dark/black)
+    const earthShine = new THREE.HemisphereLight(0x4488ff, 0x000000, 0.2);
+    this.scene.add(earthShine);
 
     // Globe
     const globeGeo = new THREE.SphereGeometry(this.radius, 64, 64);

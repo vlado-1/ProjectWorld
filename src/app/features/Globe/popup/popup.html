@@ -13,9 +13,9 @@
 @if (popupToggle.popupSubject | async; as d) {
   @if (data.visible) {
     <div class="popup" id="popup">
+      <div class="close-button" (click)="closePopup()"><img src="assets/icons/cancel-button.png"></div>
       <h3 id="popup-title"> {{data.title}}</h3>
       <p id="popup-content">{{data.content}}</p>
-      <button (click)="closePopup()">Close</button>
     </div> 
   }
 }
