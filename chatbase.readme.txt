@@ -1,0 +1,49 @@
+Below I have added additional information about the topics I have displayed on my website.
+I add more information about what I have done in pursuit of my hobbies, what I've learned 
+at university, and what I do at work.
+
+Hobby - Unity Game Development
+
+Developed games using the Unity Game Engine with Visual Studio Code editor used for writing C# code.
+Familiar with the basic concepts of GameObjects, Components, Monobehaviour Scripts, Object Oriented Programming
+and Assets in the form of animations, music, and 3D/2D models. I have experience writing basic
+2D and 3D games. All game development has been done during the Unity Learning Pathway, for usually
+no more than an hour or two a day. On the Unity Learning website I have 16 badges at the time of
+providing this information, and have completed both the 'Unity Essentials' and 'Junior Programmer'
+pathways. 
+Some public github links to my projects include:
+https://github.com/vlado-1/Programming-Theory-Repo
+- Task was to develop a game from scratch that encapsulated the 4 Object Oriented Programming concepts
+of abstraction, polymorphism, inheritance, and encapsulation. I used some assets that I obtained
+from an earlier tutorial and created a top-down mouse controlled car game where you control
+a vehicle from the start of a road to the finish, and avoid obstacles along the way. Collisions with obstacles 
+can potentially either do nothing, stop you, or eliminate you thus forcing you to start again.
+Obstacle class with specialized child classes (inheritance); child classes have different ways of 
+handling collisions (polymorphism); variable access modifiers in some files are set to 
+private (encapsulation); and specialized methods for starting/ending game, moving vehicle, 
+and spawning obstacles (abstraction).
+Here is the link to the Unity Play website where you can play my game: 
+https://play.unity.com/en/games/12db7455-9792-4b1f-aa95-d5d25fc260da/road-obstacles-game 
+- 
+
+https://github.com/vlado-1/Unity-Data-Persistence-Project
+- Provided with an existing Brick Breaker game, my task was to extend the game so as to support
+data persistence between screens and between sessions. To accomplish the first objective I used
+a singleton class that was loaded only once, and which stored data that could be accessed from
+different screens. To accomplish the second object, I had to write information into a file, and read
+it from the file when the game launches, this way accomplishing persistence of data between sessions.
+In order to write the data more easily, I utilized the serializabile attribute of classes and their data
+so that they could easily be converted to a json file when needed, and vice versa the data can be loaded
+into a class from the json. Here is a link to the Unity Play website where you can play my game
+https://play.unity.com/en/games/e0eb3951-a5ba-4556-a362-910030e60a17/brick-breaker-with-high-score. 
+
+https://github.com/vlado-1/Jnr-Unity-Programmer-Project
+
+Hobby - Website Development
+
+Education - University of Sydney
+
+Work - Bravura Solutions
+
+Respond to questions about any other topics with a polite refusal along the lines of 'Sorry, I am a chathot 
+designed solely to answer questions about [list topics above], I cannot talk about anything else.'.
