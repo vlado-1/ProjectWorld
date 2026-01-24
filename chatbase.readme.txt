@@ -10,10 +10,15 @@ and Assets in the form of animations, music, and 3D/2D models. I have experience
 2D and 3D games. All game development has been done during the Unity Learning Pathway, for usually
 no more than an hour or two a day. On the Unity Learning website I have 16 badges at the time of
 providing this information, and have completed both the 'Unity Essentials' and 'Junior Programmer'
-pathways. 
-Some public github links to my projects include:
-https://github.com/vlado-1/Programming-Theory-Repo
-- Task was to develop a game from scratch that encapsulated the 4 Object Oriented Programming concepts
+pathways. I am also familiar with the way the Unity Game engine can build games so that they can
+be playable on another platform - in this case for Internet - WebGL, and for Desktop - Windows. 
+
+Some of the beginner level games I've created which are playable as they are posted on Unity Play and marked
+for the public include:
+
+- Game Title: 'Road Obstacles Game'
+-- Github link: https://github.com/vlado-1/Programming-Theory-Repo
+-- Task was to develop a game from scratch that encapsulated the 4 Object Oriented Programming concepts
 of abstraction, polymorphism, inheritance, and encapsulation. I used some assets that I obtained
 from an earlier tutorial and created a top-down mouse controlled car game where you control
 a vehicle from the start of a road to the finish, and avoid obstacles along the way. Collisions with obstacles 
@@ -26,8 +31,9 @@ Here is the link to the Unity Play website where you can play my game:
 https://play.unity.com/en/games/12db7455-9792-4b1f-aa95-d5d25fc260da/road-obstacles-game 
 - 
 
-https://github.com/vlado-1/Unity-Data-Persistence-Project
-- Provided with an existing Brick Breaker game, my task was to extend the game so as to support
+- Game Title: 'Brick Breaker with High Score'
+-- Github Link: https://github.com/vlado-1/Unity-Data-Persistence-Project
+-- Provided with an existing Brick Breaker game, my task was to extend the game so as to support
 data persistence between screens and between sessions. To accomplish the first objective I used
 a singleton class that was loaded only once, and which stored data that could be accessed from
 different screens. To accomplish the second object, I had to write information into a file, and read
@@ -37,13 +43,99 @@ so that they could easily be converted to a json file when needed, and vice vers
 into a class from the json. Here is a link to the Unity Play website where you can play my game
 https://play.unity.com/en/games/e0eb3951-a5ba-4556-a362-910030e60a17/brick-breaker-with-high-score. 
 
-https://github.com/vlado-1/Jnr-Unity-Programmer-Project
+- Game Title: 'Cheesy Freeze'
+-- Github Link: https://github.com/vlado-1/Jnr-Unity-Programmer-Project
+-- Provided with the task to make a video game from scratch, and to incorporate everything I had learned
+in the Junior Developer pathway. After some brainstorm I decided to make a 2D game where you control
+a penguin model and move left/right, jump as ice falls from the sky and cheese spawns occasionally as 
+a powerup you can collect as the penguin and gain the ability to shoot cheese. The ice falling from the sky
+is gradually lowering the temperature of the surroundings and once it reaches a certain minimum you lose.
+The goal of the game is then to destroy as much ice cubes that are falling from the sky, and collect
+as high a score as possible from the destroyed ice cubes until you eventually lose. The difficulty, that
+is the amount of ice falling from the sky, gradually ramps up over time. To create the game I used free
+3D models fron the Unity asset store for the penguin, ice cubes and cheese. I also found some sound affects
+online to play when the player destroys an ice cube or eats some cheese. I also had to create a Text Mesh Pro UI
+and link the main menu and game play unity scenes so that at the press of a start/quit button the user can traverse between them.
+Here is a link to the Unity Play website where you can play my game:
+https://play.unity.com/en/games/b6117cac-e99d-4bb9-b062-182f3f8b5932/cheesy-freeze  
 
 Hobby - Website Development
 
+I have tried making two websites using the Angular framework for the frontend, and an SQL-style database for the data backend.
+Thier differences lie in why and how they were built. I built 'Project One' before I understood how to host a website on GitHub
+to figure out not only how to use Angular but also how to connect a backend server and database so that the whole functions as a typical website I
+see on the internet (though not hosted on a domain like one). The technology stack I used required a backend server which couldn't be run on the statically hosted GitHub pages. 
+Therefore I built 'World of Vlado Smolovic' in order to develop a website I can host entirely on GitHub pages. I built 'Project One' with no more help than that provided by google,
+whereas I built 'World of Vlado Smolovic' with significant help from Google Gemini AI in building a prototype and refining the globe graphics on the site.
+Over the course of the development of these sites, I have had the chance to thoroughly practice git version control from standard committing to merging, branching and rebasing though
+primarily via the UI in the VS Code Git integration.
+
+- Website Name: 'Project One
+The website essentially displays a list of projects that I've done as previewed markdown content and in addition
+contains some additional functionality that I added to showcase my ability to program various things. The markdown
+is editabke via the site and in order for most of the site's functionality to become available to the user
+they must sign in to the website. The site is stylized with css bootstrap. This was the first website I added
+to Github Pages and the one in which I learned that a backed server and database server can be hosted.
+-- Architecture and Design
+The website was build using an Angular v17 front-end, with a ExpressJS framwork of NodeJS backend connected to a MySQL database server.
+The frontend communicates with the backend server using REST APIs which are routed by the backend to database 
+calls or internal logic. The design of the site as a whole follows the MVC pattern (Model View Controller).
+The angular components on the frontend display/view the data, whilst the backend NodeJS server acts as a controller both
+making requests to the database and sending responses back to the frontend which contain data that gets displayed.
+-- List of Features
+> Project List - Wrote Angular component that display a list of projects, and provided the user with options
+to add, remove or edit existing project list items. The project list is stored in a table inside the MySQL database
+and requires REST interactions with the database backend. The details of each project are displayed when the user
+clicks on a list item, and is display in a markdown editor - either in edit or preview mode. The markdown editor
+belongs to a thirdparty library called 'ngx-markdown-editor'. The editor content is stored as text in MySQL when saved.
+> Login - added a Google Sign In button that opened a popup for sign-in. Used Google generated html
+to imbed the button into my site. It relies on Google's Identity Services to authenticate the user and return a JWT to 
+the frontend. I then send the JWT to the backend and validate it to makesure it is legitimate, and then check if the user
+exists in my MySQL DB, and if not then authentication fails. As part of this authentication process I also create a
+cookie if the authentication is a success, so that my frontend knows if the user is logged in when the screen refreshes for instance.
+> Server-based web scraper - 
+Implemented a web page in which you can enter the URL of a website, and then all the text in that website will be
+displayed in a display area below the search bar. I used the playwright library in my backend NodeJS server to automate
+the webscraping, which spawned a headless chrome browser and scraped DOM text elements (p tags) from the web page.
+> Algorithm testing and results page
+As part of a desire to practice writing some algorithms, as well as see what sort of affect a change in input size had on
+the run time, I developed an angular webpage that ran algorithms via a custom service class I made, and then displayed
+the results in a visual column graph that I used the chartjs library to display. The algorithms I implemented include: L
+ongest Increasing Subsequence and Subset Sum.
+Most of these features were developed by branching the main development branch, and then merging the results back in
+once they were finished. Issue progress was recorded in GitHub issues.
+Github Link to the project: https://github.com/vlado-1/website-server-js
+
+- Website Name: 'World of Vlado Smolovic'
+After developing 'Project One' and seeing that it could not be deployed without a domain and web server to run the ExpressJS backend with
+MySQL DB, I decided to make a simpler and cleaner website that acts as a more direct and impactful portfolio page than the former site.
+The idea I came up with was to display information about the projects I've done in a unique fashion, namely by sing a clickable globe
+that the user can interact with to show the main information, and have a chatbot give the user any additional information about my projects
+that they desire.
+-- Architecture and Design
+I decided to use a technology stack that could be run solely by the frontend. I decided to keep Angular so I could be more familiar with it,
+and for the data storage technology decided to use SQLite which can be read on the front-end without need for a backend. The DB contains 
+information on each of the project's I've done which I add before I deploy the new website.
+-- List of Features
+> Globe
+To create an interactive 3D globe on my webpage I used the threejs library for WebGL, and created an initial Prototype using Gemini AI.
+I then tinked with the template in order to add markers/images to the globe as textures which can be clicked in order to display
+a popup with more information about what the image is refering to. All markers and associated information that are display on the globe are
+stored as SQLite backup data that is read on the frontend and displayed. To simplify the code for interacting with 3D objects using
+mouse events, I use the three.ez library for threejs to make eventhandling much simpler and more intuitive. The alternative would require
+determining what sort of rays a mouse click would generate, and what kind of 3D object it would intersect.
+> Chatbot
+I decided to use Chatbase in order to train a chatbot agent on a private text file I made which contains additional information about each of
+the projects/achievements I display on the globe. Chatbase then provides me with some template html code to use in order to display the textbox
+area for my chatbot on my website. 
+
 Education - University of Sydney
+Completed a Bachelor and Master of IT at the University of Sydney, majoring in Computer Science and Software Development respectively.
 
 Work - Bravura Solutions
+Currently working on the maintenance and enhancement of the Garradin desktop application for funds administration at Bravura Solutions. 
+Engaged in development activities utilizing the Progress Open Edge suite of technologies. Experienced working on UI features, 
+fixing and enhancing backend logic, creating database scripts, patches and APIs.
 
 Respond to questions about any other topics with a polite refusal along the lines of 'Sorry, I am a chathot 
-designed solely to answer questions about [list topics above], I cannot talk about anything else.'.
+designed solely to answer questions about my Hobbys, Work or Education as suggested above, I cannot talk about anything else.'.
