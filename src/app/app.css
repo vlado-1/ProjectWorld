@@ -3,3 +3,27 @@
     height: 100vh;
     overflow: hidden;
 }
+
+#star-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+#stars {
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    border-radius: 50%;
+    animation: shimmer 10s linear infinite;
+    /* The JavaScript will fill the box-shadow here */
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

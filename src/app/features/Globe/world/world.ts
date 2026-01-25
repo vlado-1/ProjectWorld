@@ -31,10 +31,10 @@ export class World implements AfterViewInit {
 
   constructor(private pt: PopupToggle) {
     this.pointsData = [
-      { lat: 5, lon: 5, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity.svg' },
-      { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: 'assets/images/Bravura.png' },
-      { lat: -30, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: 'assets/images/Website.png' },
-      { lat: 10, lon: 200, title: 'University', text: 'Completed a bachelor and masters degree majoring in computer science and software development respectively.', img: 'assets/images/University.png' },
+      { lat: 5, lon: 5, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity_Country.png' },
+      { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: 'assets/images/Bravura_Country.png' },
+      { lat: -30, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: 'assets/images/Angular_Country.png' },
+      { lat: 10, lon: 200, title: 'University', text: 'Completed a bachelor and masters degree majoring in computer science and software development respectively.', img: 'assets/images/Usyd_Country.png' },
     ];
 
     this.popupToggle = pt;
@@ -71,14 +71,17 @@ export class World implements AfterViewInit {
     const globeMat = new THREE.MeshStandardMaterial({ color: 0x0e1c39a1, roughness: 1.0, metalness: 0.0 });
     this.globe = new THREE.Mesh(globeGeo, globeMat);
 
-    this.globe.on('animate', () => {            
+    this.globe.on('animate', () => {         
+      this.targetRotationY += 0.005; // Auto-rotate   
       this.rotationY += (this.targetRotationY - this.rotationY) * 0.1;
       this.globe.rotation.y = this.rotationY;
     });
-    this.globe.on('wheel', (e: any) => { 
-          this.targetRotationY += e.deltaY * 0.0005;
-        }
-    );
+    document.addEventListener('wheel', (e: any) => {
+      this.targetRotationY += e.deltaY * 0.0005;
+      if (e.deltaY < 0) {
+        this.targetRotationY -= 0.007;
+      }
+    });
 
     this.scene.add(this.globe);
 
