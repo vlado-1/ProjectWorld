@@ -4,6 +4,7 @@ import { Main, PerspectiveCameraAuto } from '@three.ez/main';
 import * as THREE from 'three';
 import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
 import { PopupToggle } from '../../../core/Services/popup-toggle';
+import { SqliteDb } from '../../../core/Services/sqlite-db';
 
 
 @Component({
@@ -29,7 +30,9 @@ export class World implements AfterViewInit {
 
   public popupToggle: PopupToggle;
 
-  constructor(private pt: PopupToggle) {
+  constructor(private pt: PopupToggle, private db: SqliteDb) {
+
+    console.log("Loaded projects from database:", this.db.getProjects());
     this.pointsData = [
       { lat: 5, lon: 5, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity_Country.png' },
       { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: 'assets/images/Bravura_Country.png' },

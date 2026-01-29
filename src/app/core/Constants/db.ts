@@ -1,4 +1,4 @@
 export const dbConfig: any = {
-    assemblyFile: 'public\\sqlite\\sql-wasm.wasm',
-    dataFile: 'public\\sqlite\\database.sqlite'
+    assemblyFile: 'assets/sqlite/sql-wasm.wasm',
+    dataFile: 'assets/sqlite/database.sqlite'
 }
