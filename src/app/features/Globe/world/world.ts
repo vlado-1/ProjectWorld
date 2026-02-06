@@ -28,19 +28,12 @@ export class World implements AfterViewInit {
   public rotationY: number = 0;
   public targetRotationY: number = 0;
 
-  public popupToggle: PopupToggle;
+  private popupToggle: PopupToggle;
+  private sqldb: SqliteDb;
 
   constructor(private pt: PopupToggle, private db: SqliteDb) {
-
-    console.log("Loaded projects from database:", this.db.getProjects());
-    this.pointsData = [
-      { lat: 5, lon: 5, title: 'Unity Development', text: 'Completed a unity junior developer course, and developed some beginner level games using the Unity Game Engine.', img: 'assets/images/Unity_Country.png' },
-      { lat: 30, lon: 60, title: 'Bravura Solutions', text: 'Work on maintaining and enhancing a desktop application for funds administration.', img: 'assets/images/Bravura_Country.png' },
-      { lat: -30, lon: 120, title: 'Website Development', text: 'Developed this dynamic website using Angular and SQLite.', img: 'assets/images/Angular_Country.png' },
-      { lat: 10, lon: 200, title: 'University', text: 'Completed a bachelor and masters degree majoring in computer science and software development respectively.', img: 'assets/images/Usyd_Country.png' },
-    ];
-
     this.popupToggle = pt;
+    this.sqldb = db;
   }
 
   ngAfterViewInit(): void {
@@ -88,48 +81,7 @@ export class World implements AfterViewInit {
 
     this.scene.add(this.globe);
 
-    // Convert each point into a marker on the globe.
-    this.pointsData.forEach((p: any) => {
-      
-      // Create a texture for each point, that displays associated image
-      const loader = new THREE.TextureLoader();
-      const markerTex = loader.load(p.img);
-
-      // Convert point longitude/latitude coordinates to x,y,z coordinates.
-      const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 0.2); // +0.2 to avoid z-fighting
-
-     /* Create Decal Geometry for texture.
-        The term "decal" is short for "decalcomania," a technique that involves 
-        transferring designs from one surface to another (i.e. 2D to sphere in this case). 
-        - wikipedia */
-
-      // Determine x,y,z rotation so object faces away for sphere centered at origin.
-      const dummy = new THREE.Object3D();
-      dummy.position.copy(pos);
-      dummy.lookAt(new THREE.Vector3(0, 0, 0)); // Look at center
-      dummy.rotateY(Math.PI); // Rotate 180 degrees around Z to face outward
-      const orientation = dummy.rotation;
-
-      const size = new THREE.Vector3(30,30,30); // The size of the projection box
-      const decalGeo = new DecalGeometry(this.globe, pos, orientation, size);
-      const decalMat = new THREE.MeshBasicMaterial({
-          map: markerTex,
-          depthTest: true,
-          depthWrite: false, // Prevents glitches when multiple decals overlap
-          polygonOffset: true, // Crucial: pushes the decal slightly "above" the globe surface
-          polygonOffsetFactor: -4, 
-      });
-
-      const marker = new THREE.Mesh(decalGeo, decalMat);
-
-      // Add click event which spawns popup
-      marker.on('click', (e: any) => {
-        this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true});
-      })
-
-      // Add texture to globe so it rotates with it
-      this.globe.add(marker);
-    });
+    this.createMarkers();
       
     // need to supply the renderer to Main for it to manage the render loop
     this.main = new Main({renderer: this.renderer, fullscreen: false, rendererParameters: { canvas, antialias: true, alpha: true }});
@@ -159,5 +111,63 @@ export class World implements AfterViewInit {
     const y = radius * Math.cos(phi);
 
     return new THREE.Vector3(x, y, z);
+  }
+
+  createMarkers() {
+
+    this.sqldb.getProjects().then((projects: any[]) => {
+      console.log("Loaded projects from database:");
+      this.pointsData = projects[0].values.map((row: any) => 
+        Object.fromEntries(projects[0].columns.map((col: any, i: any) => [col, row[i]]))
+      );
+      console.log(this.pointsData);
+      // Convert each point into a marker on the globe.
+      this.pointsData.forEach((p: any) => {
+        
+        // Create a texture for each point, that displays associated image
+        const loader = new THREE.TextureLoader();
+        const markerTex = loader.load(p.img);
+
+        // Convert point longitude/latitude coordinates to x,y,z coordinates.
+        const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 0.5); // +0.2 to avoid z-fighting
+
+      /* Create Decal Geometry for texture.
+          The term "decal" is short for "decalcomania," a technique that involves 
+          transferring designs from one surface to another (i.e. 2D to sphere in this case). 
+          - wikipedia */
+
+        // Determine x,y,z rotation so object faces away for sphere centered at origin.
+        const dummy = new THREE.Object3D();
+        dummy.position.copy(pos);
+        dummy.lookAt(new THREE.Vector3(0, 0, 0)); // Look at center
+        dummy.rotateY(Math.PI); // Rotate 180 degrees around Z to face outward
+        const orientation = dummy.rotation;
+
+        const size = new THREE.Vector3(30,30,30); // The size of the projection box
+        const decalGeo = new DecalGeometry(this.globe, pos, orientation, size);
+        const decalMat = new THREE.MeshBasicMaterial({
+            map: markerTex,
+            depthTest: true,
+            depthWrite: false, // Prevents glitches when multiple decals overlap
+            polygonOffset: true, // Crucial: pushes the decal slightly "above" the globe surface
+            polygonOffsetFactor: -4, 
+        });
+
+        const marker = new THREE.Mesh(decalGeo, decalMat);
+
+        // Add click event which spawns popup
+        marker.on('click', (e: any) => {
+          this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true});
+        })
+
+        // Add texture to globe so it rotates with it
+        this.globe.add(marker);
+      });
+
+    }).catch((error) => {
+      console.error("Error loading projects from database:", error);
+    });
+
+
   }
 }
