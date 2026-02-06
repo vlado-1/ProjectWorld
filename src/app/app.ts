@@ -13,6 +13,7 @@ export class App {
 
   ngAfterViewInit(): void {
   this.generateStarfield('stars', 500);
+  this.generateStarfield('stars-larger', 50);
   }
 
   generateStarfield(elementId: string, starCount: number): void {

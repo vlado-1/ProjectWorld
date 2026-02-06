@@ -23,6 +23,15 @@
     /* The JavaScript will fill the box-shadow here */
 }
 
+#stars-larger {
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    border-radius: 50%;
+    animation: shimmer 15s linear infinite;
+    /* The JavaScript will fill the box-shadow here */
+}
+
 @keyframes shimmer {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
