@@ -36,3 +36,29 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+#title {
+    position: absolute;
+    top: 12%;
+    left: 2%;
+    z-index: 1;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    font-size: 3em;
+}
+
+#title h1 {
+    margin-bottom: 0px;
+}
+
+#title p {
+    font-size: 0.5em;
+}
+
+/* When viewport width is 600px or less, hide the text */
+@media (max-width: 1200px) {
+    #title {
+        display: none; /* Removes it from layout */
+    }
+}

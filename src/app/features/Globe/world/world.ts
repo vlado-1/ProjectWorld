@@ -129,7 +129,7 @@ export class World implements AfterViewInit {
         const markerTex = loader.load(p.img);
 
         // Convert point longitude/latitude coordinates to x,y,z coordinates.
-        const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 1); // +1 to avoid z-fighting
+        const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 0.01*this.radius); // +1 to avoid z-fighting
 
       /* Create Decal Geometry for texture.
           The term "decal" is short for "decalcomania," a technique that involves 
