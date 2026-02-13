@@ -129,7 +129,7 @@ export class World implements AfterViewInit {
         const markerTex = loader.load(p.img);
 
         // Convert point longitude/latitude coordinates to x,y,z coordinates.
-        const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 0.01*this.radius); // +1 to avoid z-fighting
+        const pos = this.latLonToVector3(p.lat, p.lon, this.radius + 0.1*this.radius); // +1 to avoid z-fighting
 
       /* Create Decal Geometry for texture.
           The term "decal" is short for "decalcomania," a technique that involves 
@@ -143,7 +143,7 @@ export class World implements AfterViewInit {
         dummy.rotateY(Math.PI); // Rotate 180 degrees around Z to face outward
         const orientation = dummy.rotation;
 
-        const size = new THREE.Vector3(60,60,60); // The size of the projection box
+        const size = new THREE.Vector3(70,70,70); // The size of the projection box
         const decalGeo = new DecalGeometry(this.globe, pos, orientation, size);
         const decalMat = new THREE.MeshBasicMaterial({
             map: markerTex,

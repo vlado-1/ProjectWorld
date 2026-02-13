@@ -2,15 +2,11 @@ import initSqlJs from 'sql.js';
 import type { Database } from 'sql.js';
 import fs from 'fs';
 
-/* dbconfig src/core/constants file is .ts and cannot be imported
-   so need to hardcode it here. Double check these values are the same
-   as in constants files, as they could potentially go out of sync if not careful. */
 export const dbConfig: any = {
     assemblyFile: 'public/assets/sqlite/sql-wasm.wasm',
     dataFile: 'public/assets/sqlite/database.sqlite'
 }
 
-// initSqlJs returns a Promise
 initSqlJs({ locateFile: (file: string) => dbConfig.assemblyFile }).then((SQL) => {
   const db: Database = new SQL.Database();
   
