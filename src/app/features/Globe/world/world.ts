@@ -152,6 +152,7 @@ export class World implements AfterViewInit {
             depthWrite: false, // Prevents glitches when multiple decals overlap
             polygonOffset: true, // Crucial: pushes the decal slightly "above" the globe surface
             polygonOffsetFactor: -4, 
+            wireframe: false
         });
 
         const marker = new THREE.Mesh(decalGeo, decalMat);
