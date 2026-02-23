@@ -63,7 +63,7 @@ export class World implements AfterViewInit {
     this.scene.add(earthShine);
 
     // Globe
-    const globeGeo = new THREE.SphereGeometry(this.radius, 64, 64);
+    const globeGeo = new THREE.SphereGeometry(this.radius, 128, 128);
     const globeMat = new THREE.MeshStandardMaterial({ color: 0x0e1c39a1, roughness: 1.0, metalness: 0.0 });
     this.globe = new THREE.Mesh(globeGeo, globeMat);
 
@@ -72,6 +72,7 @@ export class World implements AfterViewInit {
       this.rotationY += (this.targetRotationY - this.rotationY) * 0.1;
       this.globe.rotation.y = this.rotationY;
     });
+
     document.addEventListener('wheel', (e: any) => {
       this.targetRotationY += e.deltaY * 0.0005;
       if (e.deltaY < 0) {
@@ -80,8 +81,6 @@ export class World implements AfterViewInit {
     });
 
     this.scene.add(this.globe);
-
-    this.createMarkers();
       
     // need to supply the renderer to Main for it to manage the render loop
     this.main = new Main({renderer: this.renderer, fullscreen: false, rendererParameters: { canvas, antialias: true, alpha: true }});
@@ -92,6 +91,9 @@ export class World implements AfterViewInit {
     
     // Remove screen performance stats
     this.main.showStats = false;
+
+    this.createMarkers();
+
   }
 
   /**
@@ -148,7 +150,7 @@ export class World implements AfterViewInit {
         const decalMat = new THREE.MeshBasicMaterial({
             map: markerTex,
             transparent: true,
-            depthTest: true,
+            depthTest: false,
             depthWrite: false, // Prevents glitches when multiple decals overlap
             polygonOffset: true, // Crucial: pushes the decal slightly "above" the globe surface
             polygonOffsetFactor: -4, 
@@ -157,13 +159,23 @@ export class World implements AfterViewInit {
 
         const marker = new THREE.Mesh(decalGeo, decalMat);
 
-        // Add click event which spawns popup
-        marker.on('click', (e: any) => {
+        // Create invisible clickable sphere for raycasting (decals don't raycast reliably when globe rotates)
+        const clickSphereGeo = new THREE.SphereGeometry(35, 16, 16);
+        const clickSphereMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });
+        const clickSphere = new THREE.Mesh(clickSphereGeo, clickSphereMat);
+        clickSphere.position.copy(pos);
+
+        // Add click event to invisible sphere instead of decal
+        clickSphere.on('click', (e: any) => {  
+          e.stopPropagation();
+          console.log('Marker clicked:');
+
           this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true});
         })
 
-        // Add texture to globe so it rotates with it
+        // Add both decal (visual) and invisible sphere (clickable) to globe
         this.globe.add(marker);
+        this.globe.add(clickSphere);
       });
 
     }).catch((error) => {
