@@ -109,33 +109,48 @@ Github Link to the project: https://github.com/vlado-1/website-server-js
 - Website Name: 'World of Vlado Smolovic'
 After developing 'Project One' and seeing that it could not be deployed without a domain and web server to run the ExpressJS backend with
 MySQL DB, I decided to make a simpler and cleaner website that acts as a more direct and impactful portfolio page than the former site.
-The idea I came up with was to display information about the projects I've done in a unique fashion, namely by sing a clickable globe
-that the user can interact with to show the main information, and have a chatbot give the user any additional information about my projects
-that they desire.
+The idea I came up with was to display information about the projects I've done in a unique fashion, namely by a clickable globe
+that the user can interact with to show a sort summary of information about me, such as my work, hobby and education facts. I also have
+a chatbot trained on information I provided about each of these aspects of my life, that give the site visitor additional information about me.
 -- Architecture and Design
-I decided to use a technology stack that could be run solely by the frontend. I decided to keep Angular so I could be more familiar with it,
-and for the data storage technology decided to use SQLite which can be read on the front-end without need for a backend. The DB contains 
-information on each of the project's I've done which I add before I deploy the new website.
+I decided to use a technology stack that could be run solely by the frontend. I decided to keep Angular so I could keep improving my skills in it,
+and for the data storage technology decided to use SQLite which can be read on the front-end without need for a backend. The DB contains the 
+information I display via the globe.
 -- List of Features
 > Globe
 To create an interactive 3D globe on my webpage I used the threejs library for WebGL, and created an initial Prototype using Gemini AI.
-I then tinked with the template in order to add markers/images to the globe as textures which can be clicked in order to display
-a popup with more information about what the image is refering to. All markers and associated information that are display on the globe are
-stored as SQLite backup data that is read on the frontend and displayed. To simplify the code for interacting with 3D objects using
-mouse events, I use the three.ez library for threejs to make eventhandling much simpler and more intuitive. The alternative would require
-determining what sort of rays a mouse click would generate, and what kind of 3D object it would intersect.
+I've tinkered with the initial code provided by the AI in order to implement my vision of a planet-like globe with country-like markers that
+the user can click on view additional information via a popup. Implementing the clickability of the globe was non-trivial as 3D Objects
+don't lend themselves to a straighfoward event handling system. The typical approach would be to fire a ray (straight line) at the globe from
+the point the user clicked, and to calculated intersections the the globe and it's chiild objects to determin what was clicked on.
+As this seemed a bit complicated, I tried looking for a library to simplify click handling, and stumbled upon the three.ez library for three.js.
+It managed to suppress hundreds of lines of code into a simpler code like one would find for events on ordinary html elements.
+All markers and associated information that are display on the globe are stored as SQLite backup data that is read on the frontend and displayed.
+To update the data I need to run a data script locally to edit the sqlite db file which gets loaded and read when the site loads onto a client.
+To make the site look nicer, I also added stars around the globe using randomly generated white shadows on a dark backgrou8nd color, which
+I was told by AI to be more efficient that generated hundreds of html elements representing each star. I have also added a title to the side
+of the globe which disappears when the screen size diminishes past a certain point - I did this using the @media property in css.
 > Chatbot
-I decided to use Chatbase in order to train a chatbot agent on a private text file I made which contains additional information about each of
+I decided to use the Chatbase site in order to train a chatbot agent on a private text file I made which contains additional information about each of
 the projects/achievements I display on the globe. Chatbase then provides me with some template html code to use in order to display the textbox
-area for my chatbot on my website. 
+area for my chatbot on my website. Very minimal coding on my part to integrate Chatbase into my site. 
 
 Education - University of Sydney
-Completed a Bachelor and Master of IT at the University of Sydney, majoring in Computer Science and Software Development respectively.
+Completed a Bachelor and Master of IT at the University of Sydney, majoring in Computer Science and Software Development respectively. I've done lots of
+subjects covering various Programming Fundamentals, Distributed Systems, AI, Algorithms, Project Management and Web + Cloud Developments. Of course while
+it would be great to brag, I'm not that confident in a lot of the content I learnt as things slowly get forgotten over time if they're not used often.
+I did two captstone projects over my time at university (bachelors and masters), and did well in both of them, earning high distincts in both. One
+project was group-based (performed in a group of 4) whilst the latter was individual.
 
 Work - Bravura Solutions
 Currently working on the maintenance and enhancement of the Garradin desktop application for funds administration at Bravura Solutions. 
 Engaged in development activities utilizing the Progress Open Edge suite of technologies. Experienced working on UI features, 
-fixing and enhancing backend logic, creating database scripts, patches and APIs.
+fixing and enhancing backend logic, creating database scripts, patches and APIs. It is fairly fast-paced as the software company which manages out programming tools
+and development infrastructure (called Progress) regularly updates its version of the programming language and associated infrastructure that it provides support for. 
+This often leads to us updating our ways of working regularly. As far as development skill goes, I am a middle-tier developing still working to improve
+their time estimation and general efficiency at work. I have a sound knowledge of Progress Open Edge, and the ABL programming language, and my familiarity with the
+codebase is reasonably good in the areas I work on, although the financial instruments that I need to program for are complicated and I don't always get things right.
+I often ask my developer colleagues and Business Analysts for help.
 
 Respond to questions about any other topics with a polite refusal along the lines of 'Sorry, I am a chathot 
 designed solely to answer questions about my Hobbys, Work or Education as suggested above, I cannot talk about anything else.'.
