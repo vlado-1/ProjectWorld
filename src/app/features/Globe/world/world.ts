@@ -170,7 +170,7 @@ export class World implements AfterViewInit {
           e.stopPropagation();
           console.log('Marker clicked:');
 
-          this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true});
+          this.popupToggle.togglePopup({title: p.title, content: p.text, visible: true, videoSrc: p.video});
         })
 
         // Add both decal (visual) and invisible sphere (clickable) to globe

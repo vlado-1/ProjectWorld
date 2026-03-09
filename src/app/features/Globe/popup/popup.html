@@ -16,6 +16,17 @@
       <div class="close-button" (click)="closePopup()"><img src="assets/icons/cancel-button.png"></div>
       <h3 id="popup-title"> {{data.title}}</h3>
       <p id="popup-content">{{data.content}}</p>
+      
+      @if (data.videoSrc) {
+        <iframe width="100%" 
+                height="150px" 
+                [src]="getSafeUrl(data.videoSrc)" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen></iframe>
+      }
     </div> 
   }
 }
