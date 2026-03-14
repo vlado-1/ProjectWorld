@@ -26,3 +26,10 @@
 .close-button:hover {
   cursor: pointer;
 }
+
+#popup-footer {
+  margin-top: 15px;
+  margin-bottom: 1px;
+  font-size: 12px;
+  color: #aaa;
+}
