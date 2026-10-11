@@ -1,61 +1,65 @@
 # ProjectWorld
 
-A simple and impactful portfolio page for myself containing a globe of personal project descriptions loaded using SQLite, as well as a small chatbot that is able to provide information about me that you would find on a resume.
+ProjectWorld is a personal portfolio site built with Angular. Its main feature is an interactive Three.js globe with clickable markers for projects and experience. Selecting a marker opens a popup with text and, where available, an embedded video. A Chatbase chatbot is also embedded on the page.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+## How the workspace is organized
 
-## Development server
+- `src/app/app.*` is the application shell: it places the title, animated starfield, globe, and popup.
+- `src/app/features/Globe/world/` renders and animates the globe, reads project records, and creates the clickable markers.
+- `src/app/features/Globe/popup/` displays the selected project's details.
+- `src/app/core/Services/` contains the popup state service and SQLite loading service.
+- `src/app/core/Constants/db.ts` configures the browser asset paths for the SQLite WebAssembly module and database.
+- `public/assets/` contains static files copied into the build, including the SQLite database, SQLite WASM module, and marker images.
+- `scripts/setup-data.ts` is a data-generation utility for the project SQLite database. It is not currently exposed as an npm script.
+- `docs/` is the configured production build output and is intended for static deployment.
 
-To start a local development server, run:
+The project data is stored in `public/assets/sqlite/database.sqlite`. The browser loads `sql.js` from jsDelivr, initializes it using `public/assets/sqlite/sql-wasm.wasm` (served in the app as `assets/sqlite/sql-wasm.wasm`), then fetches the database as `assets/sqlite/database.sqlite`. The globe expects a `projects` table with `lat`, `lon`, `title`, `text`, `img`, and `video` columns. Image paths in the records are relative to the deployed site, for example `assets/images/Unity_Country.png`.
 
-```bash
-ng serve
-```
+## Requirements
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js compatible with Angular 21 (Node.js `^20.19.0`, `^22.12.0`, or `>=24.0.0`).
+- npm. The repository declares npm `11.6.2` as its package manager.
+- A WebGL-capable browser for the interactive globe.
+- Internet access at runtime for the Chatbase embed and the `sql.js` script loaded from jsDelivr.
 
-## Code scaffolding
+## Development
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Install dependencies from the repository root:
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Start the Angular development server:
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Open <http://localhost:4200/>. The dev server rebuilds as source files change. `npm run watch` builds with the development configuration and watches for changes; it does not start a web server.
 
-For end-to-end (e2e) testing, run:
+Run the unit tests with:
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Angular CLI commands are also available through the npm `ng` script, for example:
 
-## Additional Resources
+```bash
+npm run ng -- generate component component-name
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Production build and deployment
+
+Build the production site with:
+
+```bash
+npm run build
+```
+
+This runs Angular's production build and then uses Windows `xcopy`/`rmdir` commands to move the browser output from `docs/browser/` into `docs/`. The result is a static site; deploy the contents of `docs/` to a static web host.
+
+The Angular build sets its base URL to `/ProjectWorld/`, matching a GitHub Pages project site at `https://<account>.github.io/ProjectWorld/`. Deploying under a different path or at the domain root requires changing the `baseHref` in `angular.json` and rebuilding. The host must serve the generated files and preserve the `assets/` paths. The app also needs network access to Chatbase and jsDelivr; the chatbot and database initialization depend on those third-party resources at runtime.
+
+The build script's file-copy and cleanup steps use Windows command-line tools, so `npm run build` as written requires Windows. On another operating system, use the Angular production build directly (`npx ng build --configuration production`) and deploy the browser output from `docs/browser/`, or adapt the post-build copy step for that platform.
