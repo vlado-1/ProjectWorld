@@ -1,7 +1,9 @@
 .main {
+    position: relative;
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    background: #000 url('/assets/gifs/space-gif.gif') center center / cover no-repeat;
 }
 
 #star-container {

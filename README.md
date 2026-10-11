@@ -18,7 +18,7 @@ The project data is stored in `public/assets/sqlite/database.sqlite`. The browse
 ## Requirements
 
 - Node.js compatible with Angular 21 (Node.js `^20.19.0`, `^22.12.0`, or `>=24.0.0`).
-- npm. The repository declares npm `11.6.2` as its package manager.
+- pnpm `11.11.0`.
 - A WebGL-capable browser for the interactive globe.
 - Internet access at runtime for the Chatbase embed and the `sql.js` script loaded from jsDelivr.
 
@@ -27,27 +27,27 @@ The project data is stored in `public/assets/sqlite/database.sqlite`. The browse
 Install dependencies from the repository root:
 
 ```bash
-npm install
+pnpm install
 ```
 
 Start the Angular development server:
 
 ```bash
-npm start
+pnpm start
 ```
 
-Open <http://localhost:4200/>. The dev server rebuilds as source files change. `npm run watch` builds with the development configuration and watches for changes; it does not start a web server.
+Open <http://localhost:4200/>. The dev server rebuilds as source files change. `pnpm watch` builds with the development configuration and watches for changes; it does not start a web server.
 
 Run the unit tests with:
 
 ```bash
-npm test
+pnpm test
 ```
 
 Angular CLI commands are also available through the npm `ng` script, for example:
 
 ```bash
-npm run ng -- generate component component-name
+pnpm ng generate component component-name
 ```
 
 ## Production build and deployment
@@ -55,11 +55,11 @@ npm run ng -- generate component component-name
 Build the production site with:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 This runs Angular's production build and then uses Windows `xcopy`/`rmdir` commands to move the browser output from `docs/browser/` into `docs/`. The result is a static site; deploy the contents of `docs/` to a static web host.
 
 The Angular build sets its base URL to `/ProjectWorld/`, matching a GitHub Pages project site at `https://<account>.github.io/ProjectWorld/`. Deploying under a different path or at the domain root requires changing the `baseHref` in `angular.json` and rebuilding. The host must serve the generated files and preserve the `assets/` paths. The app also needs network access to Chatbase and jsDelivr; the chatbot and database initialization depend on those third-party resources at runtime.
 
-The build script's file-copy and cleanup steps use Windows command-line tools, so `npm run build` as written requires Windows. On another operating system, use the Angular production build directly (`npx ng build --configuration production`) and deploy the browser output from `docs/browser/`, or adapt the post-build copy step for that platform.
+The build script's file-copy and cleanup steps use Windows command-line tools, so `pnpm build` as written requires Windows. On another operating system, use the Angular production build directly (`pnpm exec ng build --configuration production`) and deploy the browser output from `docs/browser/`, or adapt the post-build copy step for that platform.
