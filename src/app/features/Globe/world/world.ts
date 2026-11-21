@@ -166,12 +166,20 @@ export class World implements AfterViewInit {
         clickSphere.position.copy(pos);
 
         // Add click event to invisible sphere instead of decal
-        clickSphere.on('click', (e: any) => {  
+        clickSphere.on('pointerdown', (e: any) => {
           e.stopPropagation();
           const eventTarget = e.domEvent?.target;
           const isPopupClick =
             eventTarget instanceof Element && eventTarget.closest('.popup-backdrop');
-          if (isPopupClick || this.popupToggle.isVisible) {
+          const markerPosition = clickSphere.getWorldPosition(new THREE.Vector3());
+          const directionToCamera = this.camera.position.clone().sub(markerPosition).normalize();
+          const isFrontFacing = markerPosition.normalize().dot(directionToCamera) > 0;
+          if (
+            isPopupClick ||
+            this.popupToggle.isVisible ||
+            !isFrontFacing ||
+            !this.popupToggle.isMarkerOpenAllowed()
+          ) {
             return;
           }
 

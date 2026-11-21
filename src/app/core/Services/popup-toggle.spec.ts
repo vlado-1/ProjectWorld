@@ -52,4 +52,16 @@ describe('PopupToggle', () => {
     });
     expect(service.isVisible).toBe(false);
   });
+
+  it('briefly blocks marker opening after a popup closes', () => {
+    service.togglePopup({
+      title: 'Open Source',
+      content: '',
+      visible: false,
+      kind: 'github',
+    });
+
+    expect(service.isMarkerOpenAllowed()).toBe(false);
+    expect(service.isMarkerOpenAllowed(Date.now() + 1000)).toBe(true);
+  });
 });

@@ -12,7 +12,7 @@
 -->
 @if (popupToggle.popupSubject | async; as d) {
   @if (data.visible) {
-    <div class="popup-backdrop" (click)="closePopup()">
+    <div class="popup-backdrop">
       <div
         class="popup"
         [class.popup-github]="data.kind === 'github'"
