@@ -1,6 +1,10 @@
+export type PopupKind = 'standard' | 'video' | 'github';
+
 export interface PopupParam {
-    title: string;
-    content: string;
-    visible: boolean;
-    videoSrc?: string; // Optional property for video source URL
+  title: string;
+  content: string;
+  visible: boolean;
+  kind: PopupKind;
+  videoSrc?: string;
+  githubUser?: string;
 }

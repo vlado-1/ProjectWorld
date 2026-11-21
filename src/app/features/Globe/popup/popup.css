@@ -11,9 +11,21 @@
   z-index: 10;
   max-width: 300px;
   display: block;
-  text-align: center;
+  text-align: left;
   pointer-events: auto;
  }
+
+.popup-github {
+  width: min(520px, calc(100vw - 40px));
+  max-width: 520px;
+}
+
+#popup-title,
+#popup-content,
+#popup-footer,
+.github-status {
+  text-align: center;
+}
 .close-button img {
   width: 20px;
   height: 20px;
@@ -32,4 +44,68 @@
   margin-bottom: 1px;
   font-size: 12px;
   color: #aaa;
+}
+
+.github-list {
+  max-height: min(360px, 50vh);
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.github-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(42, 157, 244, 0.35);
+}
+
+.github-item:last-child {
+  border-bottom: 0;
+}
+
+.github-project {
+  color: #8dcaff;
+  font-size: 12px;
+}
+
+.github-item-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.github-status-badge {
+  padding: 2px 7px;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.github-status-badge.open {
+  color: #8dcaff;
+}
+
+.github-status-badge.merged {
+  color: #b68cff;
+}
+
+.github-status-badge.closed {
+  color: #ff8f8f;
+}
+
+.github-item a {
+  color: #fff;
+  font-weight: 600;
+}
+
+.github-item p {
+  margin: 6px 0 0;
+  color: #d0d0d8;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.github-error {
+  color: #ff8f8f;
 }

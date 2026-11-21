@@ -20,7 +20,7 @@ The project data is stored in `public/assets/sqlite/database.sqlite`. The browse
 - Node.js compatible with Angular 21 (Node.js `^20.19.0`, `^22.12.0`, or `>=24.0.0`).
 - pnpm `11.11.0`.
 - A WebGL-capable browser for the interactive globe.
-- Internet access at runtime for the Chatbase embed and the `sql.js` script loaded from jsDelivr.
+- Internet access at runtime for the Chatbase embed, the `sql.js` script loaded from jsDelivr, and GitHub's public REST API.
 
 ## Development
 
@@ -63,3 +63,7 @@ This runs Angular's production build and then uses Windows `xcopy`/`rmdir` comma
 The Angular build sets its base URL to `/ProjectWorld/`, matching a GitHub Pages project site at `https://<account>.github.io/ProjectWorld/`. Deploying under a different path or at the domain root requires changing the `baseHref` in `angular.json` and rebuilding. The host must serve the generated files and preserve the `assets/` paths. The app also needs network access to Chatbase and jsDelivr; the chatbot and database initialization depend on those third-party resources at runtime.
 
 The build script's file-copy and cleanup steps use Windows command-line tools, so `pnpm build` as written requires Windows. On another operating system, use the Angular production build directly (`pnpm exec ng build --configuration production`) and deploy the browser output from `docs/browser/`, or adapt the post-build copy step for that platform.
+
+## Dynamic open-source contributions
+
+The Open Source marker uses `fetch` against GitHub's public search API when its popup is opened. This works on GitHub Pages without a backend or API token and automatically includes new public pull requests by the configured user. Results are cached in memory for 60 seconds to avoid excessive requests; unauthenticated GitHub search is rate-limited, so the popup displays a visible error if the limit is reached.
