@@ -12,62 +12,71 @@
 -->
 @if (popupToggle.popupSubject | async; as d) {
   @if (data.visible) {
-    <div class="popup" [class.popup-github]="data.kind === 'github'" id="popup">
-      <div class="close-button" (click)="closePopup()"><img src="assets/icons/cancel-button.png"></div>
-      <h3 id="popup-title"> {{data.title}}</h3>
-      <p id="popup-content">{{data.content}}</p>
+    <div class="popup-backdrop" (click)="closePopup()">
+      <div
+        class="popup"
+        [class.popup-github]="data.kind === 'github'"
+        id="popup"
+        (click)="$event.stopPropagation()"
+      >
+        <button class="close-button" type="button" aria-label="Close popup" (click)="closePopup()">
+          <img src="assets/icons/cancel-button.png" alt="">
+        </button>
+        <h3 id="popup-title"> {{data.title}}</h3>
+        <p id="popup-content">{{data.content}}</p>
 
-      @if (data.kind === 'video' && data.videoSrc) {
-        <iframe width="100%" 
-                height="150px" 
-                [src]="getSafeUrl(data.videoSrc)" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" 
-                allowfullscreen></iframe>
-      }
-
-      @if (data.kind === 'github') {
-        @if (githubLoading) {
-          <p class="github-status">Loading open-source pull requests...</p>
-        } @else if (githubError) {
-          <p class="github-status github-error">{{githubError}}</p>
-        } @else {
-          <div class="github-list">
-            @for (pullRequest of githubPullRequests; track pullRequest.url) {
-              <article class="github-item">
-                <div class="github-item-heading">
-                  <span class="github-project">{{pullRequest.repository}}</span>
-                  <span class="github-status-badge" [class]="'github-status-badge ' + pullRequest.status">
-                    @switch (pullRequest.status) {
-                      @case ('merged') {
-                        Merged
-                      }
-                      @case ('closed') {
-                        Closed
-                      }
-                      @default {
-                        Open
-                      }
-                    }
-                  </span>
-                </div>
-                <a [href]="pullRequest.url" target="_blank" rel="noopener noreferrer">
-                  {{pullRequest.title}}
-                </a>
-                <p>{{pullRequest.summary}}</p>
-              </article>
-            } @empty {
-              <p class="github-status">No public open-source pull requests were found.</p>
-            }
-          </div>
+        @if (data.kind === 'video' && data.videoSrc) {
+          <iframe width="100%"
+                  height="150px"
+                  [src]="getSafeUrl(data.videoSrc)"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen></iframe>
         }
-      }
 
-      @if (data.kind !== 'github') {
-        <p id="popup-footer">See Chatbot for more info.</p>
-      }
-    </div> 
+        @if (data.kind === 'github') {
+          @if (githubLoading) {
+            <p class="github-status">Loading open-source pull requests...</p>
+          } @else if (githubError) {
+            <p class="github-status github-error">{{githubError}}</p>
+          } @else {
+            <div class="github-list">
+              @for (pullRequest of githubPullRequests; track pullRequest.url) {
+                <article class="github-item">
+                  <div class="github-item-heading">
+                    <span class="github-project">{{pullRequest.repository}}</span>
+                    <span class="github-status-badge" [class]="'github-status-badge ' + pullRequest.status">
+                      @switch (pullRequest.status) {
+                        @case ('merged') {
+                          Merged
+                        }
+                        @case ('closed') {
+                          Closed
+                        }
+                        @default {
+                          Open
+                        }
+                      }
+                    </span>
+                  </div>
+                  <a [href]="pullRequest.url" target="_blank" rel="noopener noreferrer">
+                    {{pullRequest.title}}
+                  </a>
+                  <p>{{pullRequest.summary}}</p>
+                </article>
+              } @empty {
+                <p class="github-status">No public open-source pull requests were found.</p>
+              }
+            </div>
+          }
+        }
+
+        @if (data.kind !== 'github') {
+          <p id="popup-footer">See Chatbot for more info.</p>
+        }
+      </div>
+    </div>
   }
 }

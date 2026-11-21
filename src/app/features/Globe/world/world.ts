@@ -168,6 +168,13 @@ export class World implements AfterViewInit {
         // Add click event to invisible sphere instead of decal
         clickSphere.on('click', (e: any) => {  
           e.stopPropagation();
+          const eventTarget = e.domEvent?.target;
+          const isPopupClick =
+            eventTarget instanceof Element && eventTarget.closest('.popup-backdrop');
+          if (isPopupClick || this.popupToggle.isVisible) {
+            return;
+          }
+
           console.log('Marker clicked:');
 
           this.popupToggle.togglePopup({

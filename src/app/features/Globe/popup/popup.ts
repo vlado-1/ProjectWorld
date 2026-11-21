@@ -44,8 +44,7 @@ export class Popup {
   }
 
   closePopup(): void {
-    this.data.visible = false;
-    this.popupToggle.togglePopup(this.data);
+    this.popupToggle.togglePopup({ ...this.data, visible: false });
   }
 
   private async loadGithubPullRequests(username: string): Promise<void> {

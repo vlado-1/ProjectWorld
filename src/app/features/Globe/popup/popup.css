@@ -1,5 +1,11 @@
-.popup {
+.popup-backdrop {
   position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+.popup {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -8,7 +14,7 @@
   padding: 20px 24px;
   border-radius: 10px;
   box-shadow: 0 0 30px rgba(42,157,244,0.6);
-  z-index: 10;
+  z-index: 11;
   max-width: 300px;
   display: block;
   text-align: left;
@@ -26,13 +32,20 @@
 .github-status {
   text-align: center;
 }
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
 .close-button img {
   width: 20px;
   height: 20px;
   background-color: #ff4d4d;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  display: block;
 }
 
 .close-button:hover {
