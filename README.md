@@ -66,4 +66,4 @@ The build script's file-copy and cleanup steps use Windows command-line tools, s
 
 ## Dynamic open-source contributions
 
-The Open Source marker uses `fetch` against GitHub's public search API when its popup is opened. This works on GitHub Pages without a backend or API token and automatically includes new public pull requests by the configured user. Results are cached in memory for 60 seconds to avoid excessive requests; unauthenticated GitHub search is rate-limited, so the popup displays a visible error if the limit is reached.
+The Open Source marker uses `fetch` against GitHub's public search API when its popup is opened. This works on GitHub Pages without a backend or API token and automatically includes new public pull requests by the configured user (up to GitHub's 1000-result search limit, fetched 100 per request). Results are cached in memory for 60 seconds to avoid excessive requests; unauthenticated GitHub search is rate-limited, so the popup displays a visible error if the limit is reached.
